@@ -1,11 +1,11 @@
 package com.travel.automation.base;
 
-import com.travel.automation.utils.ConfigReader;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+
+import io.github.bonigarcia.wdm.WebDriverManager;
 
 public class BaseTest {
 
@@ -13,23 +13,14 @@ public class BaseTest {
 
     @BeforeMethod
     public void setUp() {
-        // Hardcode ChromeDriver path
-        System.setProperty("webdriver.chrome.driver", "drivers/chromedriver.exe");
+        // Automatically downloads and sets up the correct ChromeDriver version
+        WebDriverManager.chromedriver().setup();
 
-        // Chrome options
-        ChromeOptions options = new ChromeOptions();
-        if (ConfigReader.getProperty("headless").equalsIgnoreCase("true")) {
-            options.addArguments("--headless");
-        }
+        // Initialize ChromeDriver
+        driver = new ChromeDriver();
 
-        // Initialize WebDriver
-        driver = new ChromeDriver(options);
-
-        // Maximize window
+        // Optional: maximize window
         driver.manage().window().maximize();
-
-        // Open base URL from config.properties
-        driver.get(ConfigReader.getProperty("baseUrl"));
     }
 
     @AfterMethod
